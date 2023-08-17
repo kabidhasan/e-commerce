@@ -1,0 +1,129 @@
+const db = require("../db");
+const axios = require("axios");
+const http = require("http");
+
+exports.addToCart = async (req, res) => {
+  const { email, item_id, count } = req.body;
+
+  try {
+    if (email != req.user.email) {
+      return res.status(401).json({
+        message: "Unauthorized Attempt.",
+      });
+    }
+
+    const cartUpdateQuery = `
+      UPDATE cart
+      SET
+          item1 = CASE WHEN $1 = 1 THEN item1 + $2 ELSE item1 END,
+          item2 = CASE WHEN $1 = 2 THEN item2 + $2 ELSE item2 END,
+          item3 = CASE WHEN $1 = 3 THEN item3 + $2 ELSE item3 END
+      WHERE email = $3
+    `;
+
+    await db.query(cartUpdateQuery, [item_id, count, email]);
+
+    res.status(200).json({
+      success: true,
+      message: `Item ${item_id} quantity increased by ${count} in the cart.`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+exports.placeOrder = async (req, res) => {
+  try {
+    const { email } = req.user;
+
+    // retriving name by email
+    const nameResult = await db.query(
+      "SELECT name FROM user_info WHERE email = $1",
+      [email]
+    );
+
+    if (nameResult.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const name = nameResult.rows[0].name;
+
+    // retriving address by email
+    const addressResult = await db.query(
+      "SELECT address FROM user_info WHERE email = $1",
+      [email]
+    );
+
+    if (addressResult.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const address = addressResult.rows[0].address;
+
+    // retriving cart
+    const result = await db.query(
+      `SELECT item1, item2, item3 FROM cart WHERE email = $1;`,
+      [email]
+    );
+
+    if (result.rows.length > 0) {
+      const { item1, item2, item3 } = result.rows[0];
+      console.log(item1);
+      const itemPrices = await db.query(
+        "SELECT item_id, item_price FROM items"
+      );
+      const itemPriceMap = itemPrices.rows.reduce((map, item) => {
+        map[item.item_id] = item.item_price;
+        return map;
+      }, {});
+
+      // Calculate the total amount
+      const amount =
+        item1 * itemPriceMap[1] +
+        item2 * itemPriceMap[2] +
+        item3 * itemPriceMap[3];
+
+      // =====================================================================================================
+      //
+      //
+      //Here we will check whether the transaction is successful
+      //
+      //
+      //
+      //
+      //
+      await db.query(
+        `
+      INSERT INTO "order" (name, email, address, item1, item2, item3, amount)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `,
+        [name, email, address, item1, item2, item3, amount]
+      );
+
+      await db.query(
+        `UPDATE cart SET item1 = 0, item2 = 0, item3 = 0 WHERE email = $1;`,
+        [email]
+      );
+
+      // Now you can use item1, item2, and item3 here
+    } else {
+      // Handle the case when no rows are returned
+      throw new Error("No cart items found for the user.");
+    }
+
+    res.status(200).json({
+      success: true,
+      msg: "Order placed successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: error.message,
+    });
+  }
+};
+//hello
