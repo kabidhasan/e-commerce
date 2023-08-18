@@ -5,7 +5,8 @@ const router = express.Router();
 exports.transaction = async (req, res) => {
   try {
     var { sender_acc, receiver_acc, amount } = req.body;
-      amount = parseFloat(amount);
+    amount = parseFloat(amount);
+    console.log(req.body)
     
     await db.query("BEGIN");
 
@@ -20,10 +21,12 @@ exports.transaction = async (req, res) => {
     const receiverBalanceResult = await db.query(receiverBalanceQuery, [
       receiver_acc,
     ]);
-
+    
+    console.log(senderBalanceResult.rows.length)
     var senderBalance = parseFloat(senderBalanceResult.rows[0].balance);
+    console.log(receiver_acc);
     var receiverBalance = parseFloat(receiverBalanceResult.rows[0].balance);
-
+    
       console.log("senderBalance:", senderBalance, typeof senderBalance);
       console.log("amount:", amount, typeof amount);
 
@@ -31,6 +34,7 @@ exports.transaction = async (req, res) => {
 
     
     if (senderBalance < amount) {
+      console.log("Insufficient balance")
       throw new Error("Insufficient balance");
     }
 
