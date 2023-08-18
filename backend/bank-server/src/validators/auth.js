@@ -20,16 +20,16 @@ const name = check("name").notEmpty().withMessage("Name is required.");
 
 const address = check("address").notEmpty().withMessage("Address is required.");
 
-const loginFieldsCheck = check("email").custom(async (value, { req }) => {
-  const user = await db.query("SELECT * FROM bank_user WHERE email = $1", [value]);
+const loginFieldsCheck = check("acc_no").custom(async (value, { req }) => {
+  const user = await db.query("SELECT * FROM bank_user WHERE acc_no = $1", [value]);
   if (!user.rows.length) {
-    throw new Error("Email does not exist.");
+    throw new Error("Account number does not exist.");
   }
 
-  const validPassword = await compare(req.body.password, user.rows[0].password);
+  const validPin= await compare(req.body.pin, user.rows[0].pin);
 
-  if (!validPassword) {
-    throw new Error("Password is invalid");
+  if (!validPin) {
+    throw new Error("Pin is invalid");
   }
 
   req.user = user.rows[0];

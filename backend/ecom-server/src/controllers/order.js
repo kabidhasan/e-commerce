@@ -39,7 +39,7 @@ exports.addToCart = async (req, res) => {
 exports.placeOrder = async (req, res) => {
   try {
     const { email } = req.user;
-
+    
     // retriving name by email
     const nameResult = await db.query(
       "SELECT name FROM user_info WHERE email = $1",
@@ -90,7 +90,25 @@ exports.placeOrder = async (req, res) => {
       // =====================================================================================================
       //
       //
-      //Here we will check whether the transaction is successful
+      const accNoQuery = 'SELECT bank_acc FROM payment_info WHERE email = $1';
+      accNoResult = await db.query(accNoQuery, [email]);
+      if (!accNoResult.rows.length) {
+        return res.status(500).json({
+          success: false,
+          msg: "Set payment info first"
+
+        })
+      }
+
+      const acc_no = accNoResult.rows[0].bank_acc;
+      const balanceResponse = await axios.get(`http://localhost:5000/bank/getBalanceByAccNo?acc_no=${acc_no}`);
+      const balance = balanceResponse.data.balance;
+      if (balance < amount) {
+        return res.status(500).json({
+          success: false,
+          msg: "Insufficient balance"
+        })
+      }
       //
       //
       //

@@ -15,18 +15,18 @@ const opts = {
 };
 
 passport.use(
-  new Strategy(opts, async ({ email }, done) => {
+  new Strategy(opts, async ({ acc_no }, done) => {
     try {
       const { rows } = await db.query(
-        "SELECT  email FROM user_info WHERE email = $1",
-        [email]
+        "SELECT  acc_no FROM bank_user WHERE acc_no = $1",
+        [acc_no]
       );
 
       if (!rows.length) {
         throw new Error("401 not authorized");
       }
 
-      let user = { email: rows[0].email };
+      let user = { acc_no: rows[0].acc_no };
 
       return await done(null, user);
     } catch (error) {

@@ -48,7 +48,7 @@ exports.login = async (req, res) => {
     let user = req.user;
     console.log(req.user);
     let payload = {
-      email: user.email,
+      acc_no: user.acc_no,
     };
     const token = await sign(payload, SECRET);
     res.status(200).cookie("token", token, { httpOnly: true }).json({
@@ -115,7 +115,7 @@ exports.verifyBankInfo = async (req, res) => {
       success: true,
       msg: "Payment info verified.",
     });
-    
+
   } catch (error) {
       res.status(401).json({
       error: error.message,
