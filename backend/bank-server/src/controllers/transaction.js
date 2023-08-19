@@ -4,6 +4,7 @@ const router = express.Router();
 
 exports.transaction = async (req, res) => {
   try {
+    console.log("arrived bank");
     var { sender_acc, receiver_acc, amount } = req.body;
     amount = parseFloat(amount);
     console.log(req.body)

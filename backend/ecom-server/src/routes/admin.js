@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = Router();
-const {login, test, adminProtected, logout, getAllOrders, getAllApprovedOrders, getAllPendingOrders} = require("../controllers/admin");
+const {login, test, adminProtected, logout, getAllOrders, getAllApprovedOrders, getAllPendingOrders, approveOrderById, paySupplier} = require("../controllers/admin");
 const { userAuth } = require("../middlewares/auth-middleware");
 const { validationMiddleware } = require("../middlewares/validation-middleware");
 const{isAdmin}= require("../middlewares/admin-middleware")
@@ -15,7 +15,9 @@ router.get("/getAllApprovedOrders", isAdmin, getAllApprovedOrders);
 
 router.get("/getAllPendingOrders", isAdmin, getAllPendingOrders);
 
+router.post("/approveOrderById", isAdmin, approveOrderById);
 
+router.post("/paySupplier", paySupplier);
 
 router.get("/logout", isAdmin, logout); 
 
