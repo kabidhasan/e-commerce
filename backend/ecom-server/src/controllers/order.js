@@ -2,6 +2,11 @@ const db = require("../db");
 const axios = require("axios");
 const http = require("http");
 
+const ECOM_BANK_ACCOUNT = require('../constants');
+
+const ecom_acc = 111111;
+
+
 exports.addToCart = async (req, res) => {
   const { email, item_id, count } = req.body;
 
@@ -87,15 +92,45 @@ exports.placeOrder = async (req, res) => {
         item2 * itemPriceMap[2] +
         item3 * itemPriceMap[3];
 
-      // =====================================================================================================
-      //
-      //
-      //Here we will check whether the transaction is successful
-      //
-      //
-      //
-      //
-      //
+      if (!amount) {
+        return res.status(500).json({
+          success: false,
+          msg: "Cart is empty"
+        })
+      }
+      
+      // checking if he has already set the payment info
+      const accNoQuery = "SELECT bank_acc FROM payment_info WHERE email = $1";
+      accNoResult = await db.query(accNoQuery, [email]);
+      if (!accNoResult.rows.length) {
+        return res.status(500).json({
+          success: false,
+          msg: "Set payment info first",
+        });
+      }
+      const acc_no = accNoResult.rows[0].bank_acc;
+      console.log(acc_no);
+      // Preparing transaction body
+
+      const transactionData = {
+        sender_acc: acc_no, 
+        receiver_acc: ecom_acc, 
+        amount: amount, 
+      };
+
+      // Make a POST request to perform the transaction
+      const transactionResponse = await axios.post(
+        "http://localhost:5000/bank/transaction",
+        transactionData
+      );
+
+      if (transactionResponse.data.success) {
+        
+        console.log(transactionResponse.data.msg);
+      } else {
+        console.log("Transaction failed:", transactionResponse.data.msg);
+      }
+
       await db.query(
         `
       INSERT INTO "order" (name, email, address, item1, item2, item3, amount)
@@ -109,9 +144,11 @@ exports.placeOrder = async (req, res) => {
         [email]
       );
 
-      // Now you can use item1, item2, and item3 here
+
+      
     } else {
-      // Handle the case when no rows are returned
+      
+
       throw new Error("No cart items found for the user.");
     }
 
@@ -126,4 +163,4 @@ exports.placeOrder = async (req, res) => {
     });
   }
 };
-//hello
+
