@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { Store } from "../Store";
 import data from "../data";
+import { userData } from "../screens/SignInScreen";
+import axios from "axios";
+
 function Product(props) {
   const { product } = props;
 
@@ -11,24 +14,35 @@ function Product(props) {
   const {
     cart: { cartItems },
   } = state;
-
+  
   const addToCartHandler = async (item) => {
-    const existItem = cartItems.find((x) => x._id === product._id);
+    const existItem = cartItems.find((x) => x.item_id === item.item_id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    // const { data } = await axios.get(`/api/products/${item._id}`);
-    const newProduct = data.products.find(
-      (product) => product._id === item._id
-    );
 
-    if (newProduct.countInStock < quantity) {
-      window.alert("Sorry. Product is out of stock");
-      return;
+    try {
+      // Prepare data for the POST request
+      const emailResponse = await axios.get("/ecom/getCurrentUserEmail");
+      console.log(emailResponse.data.email);
+      const dataToSend = {
+        email: emailResponse.data.email, // Replace with the user's email
+        item_id: item.item_id, // Assuming your API expects item_id
+        count: 1,
+      };
+
+      // Make the Axios POST request
+      await axios.post("/ecom/addToCart", dataToSend);
+
+      // Update the context or state as needed
+      ctxDispatch({
+        type: "CART_ADD_ITEM",
+        payload: { ...item, quantity },
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
     }
-    ctxDispatch({
-      type: "CART_ADD_ITEM",
-      payload: { ...item, quantity },
-    });
   };
+
+  
 
   return (
     <Card>
@@ -37,16 +51,12 @@ function Product(props) {
       </Link>
       <Card.Body>
         <Link to={`/product/${product.slug}`}>
-          <Card.Title>{product.name}</Card.Title>
+          <Card.Title>{product.item_name}</Card.Title>
         </Link>
-        <Card.Text>${product.price}</Card.Text>
-        {product.countInStock === 0 ? (
-          <Button variant="light" disabled>
-            Out of stock
-          </Button>
-        ) : (
+        <Card.Text>${product.item_price}</Card.Text>
+        
           <Button onClick={() => addToCartHandler(product)}>Add to cart</Button>
-        )}
+        
       </Card.Body>
     </Card>
   );

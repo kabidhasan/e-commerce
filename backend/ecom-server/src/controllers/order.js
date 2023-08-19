@@ -9,14 +9,15 @@ const ecom_acc = 111111;
 
 exports.addToCart = async (req, res) => {
   const { email, item_id, count } = req.body;
+ 
 
   try {
-    if (email != req.user.email) {
-      return res.status(401).json({
-        message: "Unauthorized Attempt.",
-      });
-    }
-
+    // if (email != req.user.email) {
+    //   return res.status(401).json({
+    //     message: "Unauthorized Attempt.",
+    //   });
+    // }
+    console.log(email);
     const cartUpdateQuery = `
       UPDATE cart
       SET
@@ -27,8 +28,9 @@ exports.addToCart = async (req, res) => {
     `;
 
     await db.query(cartUpdateQuery, [item_id, count, email]);
-
+    console.log("done")
     res.status(200).json({
+      
       success: true,
       message: `Item ${item_id} quantity increased by ${count} in the cart.`,
     });
@@ -43,8 +45,8 @@ exports.addToCart = async (req, res) => {
 
 exports.placeOrder = async (req, res) => {
   try {
-    const { email } = req.user;
-
+    const { email , item1, item2, item3} = req.body;
+    console.log("I am here");
     // retriving name by email
     const nameResult = await db.query(
       "SELECT name FROM user_info WHERE email = $1",
@@ -70,14 +72,10 @@ exports.placeOrder = async (req, res) => {
     const address = addressResult.rows[0].address;
 
     // retriving cart
-    const result = await db.query(
-      `SELECT item1, item2, item3 FROM cart WHERE email = $1;`,
-      [email]
-    );
-
-    if (result.rows.length > 0) {
-      const { item1, item2, item3 } = result.rows[0];
-      console.log(item1);
+    // const result = await db.query(
+    //   `SELECT item1, item2, item3 FROM cart WHERE email = $1;`,
+    //   [email]
+    // );
       const itemPrices = await db.query(
         "SELECT item_id, item_price FROM items"
       );
@@ -138,7 +136,7 @@ exports.placeOrder = async (req, res) => {
       `,
         [name, email, address, item1, item2, item3, amount]
       );
-
+      console.log("heyyy");
       await db.query(
         `UPDATE cart SET item1 = 0, item2 = 0, item3 = 0 WHERE email = $1;`,
         [email]
@@ -146,11 +144,11 @@ exports.placeOrder = async (req, res) => {
 
 
       
-    } else {
+    
       
 
-      throw new Error("No cart items found for the user.");
-    }
+      
+    
 
     res.status(200).json({
       success: true,

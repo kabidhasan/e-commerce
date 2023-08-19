@@ -10,11 +10,11 @@ import { useContext, useEffect } from "react";
 import { Store } from "./Store";
 import CartScreen from "./screens/CartScreen";
 import SigninScreen from "./screens/SignInScreen";
+import SignupScreen from "./screens/SignupScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import ShippingAddressScreen from "./screens/ShippingAddressScreen";
-import SignupScreen from "./screens/SignUpScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 

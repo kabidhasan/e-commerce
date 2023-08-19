@@ -7,9 +7,7 @@ const {
 const { userAuth } = require("../middlewares/auth-middleware");
 
 router.post(
-  "/addToCart",
-  userAuth,
-  addToCart
+  "/addToCart",addToCart
 );
 router.post("/placeOrder", userAuth, placeOrder);
 

@@ -7,6 +7,7 @@ const {
   logout,
 
   setPaymentInfo,
+  getCurrentUserEmail,
 
 } = require("../controllers/auth");
 const {
@@ -32,6 +33,10 @@ router.post("/login", loginValidation, validationMiddleware, login);
 router.post("/setPaymentInfo", userAuth, setPaymentInfo);
 
 router.get("/protected", userAuth, protected);
+
+router.get("/getCurrentUserEmail",userAuth,  getCurrentUserEmail);
+
 router.get("/logout", userAuth, logout);
+
 
 module.exports = router;

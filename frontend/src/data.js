@@ -1,44 +1,40 @@
 const data = {
   products: [
     {
-      _id: '1',
-      name: "Honey Nuts",
+      item_id: "1",
+      item_name: "Honey Nuts",
       slug: "honey-nuts",
-      category: "Honey",
+      quantity: 100,
       image: "/images/p1.jpg", // 679px × 829px
-      price: 1200,
-      countInStock: 10,
-      brand: "ghorer-bazar",
-      rating: 4,
-      numReviews: 10,
+      item_price: 1200,
+
       description: "high quality food",
     },
     {
-      _id: '2',
-      name: "Gawa Ghee",
+      item_id: "2",
+      item_name: "Gawa Ghee",
       slug: "gawa-ghee",
-      category: "Milk",
+      quantity: 100,
       image: "/images/p2.jpg",
-      price: 800,
-      countInStock: 2,
-      brand: "ghorer-bazar",
-      rating: 4.0,
-      numReviews: 10,
+      item_price: 800,
+
       description: "high quality ghee",
     },
     {
-      _id: '3',
-      name: "Black Seed Honey",
+      item_id: "3",
+      item_name: "Black Seed Honey",
       slug: "black-seed-honey",
-      category: "Honey",
+      quantity: 100,
       image: "/images/p3.jpg",
-      price: 1600,
-      countInStock: 15,
-      brand: "ghorer-bazar",
-      rating: 4,
-      numReviews: 14,
+      item_price: 1600,
+
       description: "high quality honey",
     },
   ],
 };
 export default data;
+
+
+
+
+
