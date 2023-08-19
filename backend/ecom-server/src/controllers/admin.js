@@ -4,17 +4,14 @@ const { sign } = require("jsonwebtoken");
 const { SECRET } = require("../constants");
 const axios = require("axios");
 
-
 exports.login = (req, res) => {
   try {
     const { email, password } = req.body;
     const payLoad = { email: "admin@gmail.com", role: "admin" };
     if (email === "admin@gmail.com" && password === "admin") {
-      const token = sign(
-        payLoad,
-        SECRET
-      );
+      const token = sign(payLoad, SECRET);
       return res.status(200).cookie("token", token, { httpOnly: true }).json({
+        email: payLoad.email,
         success: true,
         msg: "Logged in successfully",
       });
@@ -36,14 +33,14 @@ exports.login = (req, res) => {
 exports.adminProtected = async (req, res) => {
   try {
     return res.status(200).json({
-      "msg": "You are admin. Your place."
-    })
+      msg: "You are admin. Your place.",
+    });
   } catch (error) {
     return res.status(500).json({
-      "msg": error.message
+      msg: error.message,
     });
   }
-}
+};
 
 exports.logout = async (req, res) => {
   try {
@@ -109,10 +106,7 @@ exports.getAllPendingOrders = async (req, res) => {
   }
 };
 
-
-
 exports.approveOrderById = async (req, res) => {
-
   try {
     const { order_id } = req.body;
 
@@ -147,7 +141,6 @@ exports.approveOrderById = async (req, res) => {
       msg: "Order approved and forwarded to supplier.",
     });
   } catch (error) {
-    
     await db.query("ROLLBACK");
 
     res.status(500).json({
@@ -158,9 +151,6 @@ exports.approveOrderById = async (req, res) => {
   }
 };
 
-
-
-
 exports.paySupplier = async (req, res) => {
   console.log("about to go bank");
   try {
@@ -168,7 +158,7 @@ exports.paySupplier = async (req, res) => {
     //await db.query("BEGIN");
 
     // Check if the order has already been shipped
-    
+
     const checkShippedQuery =
       'SELECT shipped, amount FROM "order" WHERE order_id = $1';
     const checkShippedResult = await db.query(checkShippedQuery, [order_id]);
@@ -193,15 +183,16 @@ exports.paySupplier = async (req, res) => {
         msg: "Order has already been shipped",
       });
     }
-    console.log("about to go bank")
+    console.log("about to go bank");
     // Send POST request to external bank API
-    console.log('11111111111')
+    console.log("11111111111");
     const bankApiUrl = "http://localhost:5000/bank/transaction";
-    const sender_acc = 111111;  const receiver_acc= 555555;
+    const sender_acc = 111111;
+    const receiver_acc = 555555;
     const bankApiResponse = await axios.post(bankApiUrl, {
-      "sender_acc": sender_acc,
-      "receiver_acc": receiver_acc,
-      "amount" : sendingAmount
+      sender_acc: sender_acc,
+      receiver_acc: receiver_acc,
+      amount: sendingAmount,
     });
 
     if (bankApiResponse.data.success) {
@@ -225,6 +216,3 @@ exports.paySupplier = async (req, res) => {
     });
   }
 };
-
-
-

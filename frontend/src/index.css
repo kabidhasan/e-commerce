@@ -50,3 +50,28 @@ main {
 .product-info {
   padding: 1rem;
 }
+/* Add this to your CSS or stylesheet */
+.admin-home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh; /* Adjust this value based on your needs */
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.subtitle {
+  font-weight: normal; /* Set the font weight to normal */
+  margin-bottom: 40px;
+}
+
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 30px;
+}

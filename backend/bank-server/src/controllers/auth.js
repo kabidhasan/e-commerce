@@ -37,6 +37,7 @@ exports.register = async (req, res) => {
       bank_acc: bank_acc,
     });
   } catch (error) {
+    console.log(error);
     res.status(401).json({
       error: error.message,
     });
@@ -45,13 +46,18 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log("Bank e ashlam");
+
     let user = req.user;
-    console.log(req.user);
     let payload = {
       acc_no: user.acc_no,
     };
+    console.log("Bank e abar ashlam");
+
     const token = await sign(payload, SECRET);
     res.status(200).cookie("token", token, { httpOnly: true }).json({
+      email: user.email,
+      acc_no: user.acc_no,
       success: true,
       msg: "Logged in successfully",
     });
@@ -115,9 +121,8 @@ exports.verifyBankInfo = async (req, res) => {
       success: true,
       msg: "Payment info verified.",
     });
-
   } catch (error) {
-      res.status(401).json({
+    res.status(401).json({
       error: error.message,
     });
   }
