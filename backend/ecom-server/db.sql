@@ -49,6 +49,3 @@ CREATE TABLE items (
 
 
 
-
-
-

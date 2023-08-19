@@ -5,7 +5,9 @@ const {
   login,
   protected,
   logout,
+
   setPaymentInfo,
+
 } = require("../controllers/auth");
 const {
   registrationValidation,
@@ -26,7 +28,9 @@ router.post(
   register
 );
 router.post("/login", loginValidation, validationMiddleware, login);
+
 router.post("/setPaymentInfo", userAuth, setPaymentInfo);
+
 router.get("/protected", userAuth, protected);
 router.get("/logout", userAuth, logout);
 
