@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import { useContext } from "react";
 import data from "../data";
 import { Store } from "../Store";
+import Axios from "axios";
 
 function ProductScreen() {
   const navigate = useNavigate();
@@ -18,20 +19,32 @@ function ProductScreen() {
   const { cart } = state;
 
   const addToCartHandler = async () => {
-    const existItem = cart.cartItems.find((x) => x._id === product._id);
+    const existItem = cart.cartItems.find((x) => x.item_id === product.item_id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
 
-    const productToAdd = data.products.find((product) => product.slug === slug); // he used _id in this place
+    const productToAdd = data.products.find((product) => product.slug === slug);
 
-    if (productToAdd.countInStock < quantity) {
-      window.alert("Sorry. Product is out of stock");
-      return;
+    // Prepare data for the POST request
+    const dataToSend = {
+      email: "user2@example.com", // Replace with the user's email
+      item_id: productToAdd.item_id, // Assuming your API expects item_id
+      count: 1,
+    };
+
+    try {
+      // Make the Axios POST request
+     // const response= await Axios.post("/ecom/addToCart", dataToSend);
+
+      // Update the context or state as needed
+      ctxDispatch({
+        type: "CART_ADD_ITEM",
+        payload: { ...productToAdd, quantity },
+      });
+
+      navigate("/cart"); // Navigate to the cart page
+    } catch (error) {
+      console.error("Error adding to cart:", error);
     }
-    ctxDispatch({
-      type: "CART_ADD_ITEM",
-      payload: { ...productToAdd, quantity },
-    });
-    navigate("/cart"); // will comment out this if we don't want instant navigation
   };
   // Find the product that matches the provided slug
   const product = data.products.find((product) => product.slug === slug);
@@ -47,16 +60,16 @@ function ProductScreen() {
           <img
             className="img-fluid"
             src={product.image}
-            alt={product.name}
+            alt={product.item_name}
           ></img>
         </Col>
         <Col md={6}>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h1>{product.name}</h1>
+              <h1>{product.item_name}</h1>
             </ListGroup.Item>
 
-            <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+            <ListGroup.Item>Price: ${product.item_price}</ListGroup.Item>
             <ListGroup.Item>
               Description:
               <p>{product.description}</p>
@@ -64,7 +77,7 @@ function ProductScreen() {
             <ListGroup.Item>
               <Row>
                 <Col>Price:</Col>
-                <Col>${product.price}</Col>
+                <Col>${product.item_price}</Col>
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>

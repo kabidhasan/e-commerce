@@ -135,6 +135,25 @@ exports.setPaymentInfo = async (req, res) => {
   }
 };
 
+
+exports.getCurrentUserEmail= async(req, res) => {
+  try {
+    if (req.user) {
+      const userEmail = req.user.email;
+      res.status(200).json({ success: true, email: userEmail });
+    } else {
+      res
+        .status(401)
+        .json({ success: false, message: "User not authenticated" });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
+
+
 exports.protected = async (req, res) => {
   try {
     res.status(200).json({

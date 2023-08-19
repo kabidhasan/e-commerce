@@ -2,6 +2,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Axios from "axios";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Store } from "../Store";
@@ -36,7 +37,11 @@ export default function SigninScreen() {
       
 
       //   console.log(userData);
+      console.log(userData.data.email)
+      
       ctxDispatch({ type: "USER_SIGNIN", payload: userData.data });
+
+      
 
       localStorage.setItem("userInfo", JSON.stringify(userData.data));
 

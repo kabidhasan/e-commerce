@@ -7,7 +7,7 @@ const orderRoutes = require("./routes/order")
 
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/admin");
-
+const itemsRoutes = require("./routes/items");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const passport = require("passport");
@@ -17,11 +17,12 @@ require("./middlewares/passport-middleware");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true }));
+//app.use(cors({ credentials: true }));
 app.use(passport.initialize());
 app.use("/ecom/", authRoutes);
 app.use("/ecom/", orderRoutes);
 app.use("/ecom/", userRoutes);
+app.use("/ecom/", itemsRoutes);
 app.use("/admin/", adminRoutes);
 
 
