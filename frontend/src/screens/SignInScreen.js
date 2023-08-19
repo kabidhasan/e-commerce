@@ -22,13 +22,13 @@ export default function SigninScreen() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-    //  console.log("Sending request with data:", { email, password });
+      //  console.log("Sending request with data:", { email, password });
       const userData = await Axios.post("/ecom/login", {
         //getting this from backend
         email,
         password,
       });
-     // console.log("Received response:", userData.data);
+      // console.log("Received response:", userData.data);
       // const { info } = await Axios.get("/ecom//getNameByEmail", {
       //   email,
       // });
@@ -79,8 +79,7 @@ export default function SigninScreen() {
           </Button>
         </div>
         <div className="mb-3">
-          New customer?{" "}
-          <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
+          New customer? <Link to={`/signup`}>Create your account</Link>
         </div>
       </Form>
     </Container>
