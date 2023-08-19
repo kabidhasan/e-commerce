@@ -2,7 +2,9 @@ const db = require("../db");
 const { hash } = require("bcryptjs");
 const { sign } = require("jsonwebtoken");
 const { SECRET } = require("../constants");
+
 const axios = require("axios");
+
 
 exports.getUsers = async (req, res) => {
   try {
@@ -19,6 +21,7 @@ exports.register = async (req, res) => {
   try {
     const { email, password, address, name } = req.body;
     hashedPassword = await hash(password, 10);
+
     await db.query("INSERT INTO user_info (email, name, password, address) values ($1, $2, $3, $4)", [
       email,
       name,
@@ -30,6 +33,7 @@ exports.register = async (req, res) => {
       "INSERT INTO cart(email) values ($1)",
       [email]
     );
+
     return res.status(201).json({
       success: "true",
       msg: "User registartion successful",
@@ -41,17 +45,44 @@ exports.register = async (req, res) => {
   }
 };
 
+
+// exports.login = async (req, res) => {
+//   try {
+//     let user = req.user;
+//     console.log(req.user);
+//     let payload = {
+//       email: user.email,
+//     };
+//     const token = await sign(payload, SECRET);
+//     res.status(200).cookie("token", token, { httpOnly: true }).json({
+//       success: true,
+//       msg: "Logged in successfully",
+//     });
+//   } catch (error) {
+//     res.status(401).json({
+//       error: error.message,
+//     });
+//   }
+// };
 exports.login = async (req, res) => {
   try {
     let user = req.user;
-    console.log(req.user);
     let payload = {
+      name: user.name,
       email: user.email,
+      isAdmin: user.isAdmin,
     };
     const token = await sign(payload, SECRET);
+
     res.status(200).cookie("token", token, { httpOnly: true }).json({
+      _id: payload._id,
+      name: payload.name,
+      email: payload.email,
+      isAdmin: payload.isAdmin,
+      token: token,
       success: true,
       msg: "Logged in successfully",
+
     });
   } catch (error) {
     res.status(401).json({
@@ -59,6 +90,7 @@ exports.login = async (req, res) => {
     });
   }
 };
+
 
 exports.setPaymentInfo = async (req, res) => {
   try {
@@ -110,6 +142,7 @@ exports.setPaymentInfo = async (req, res) => {
     });
   }
 };
+
 
 
 exports.protected = async (req, res) => {

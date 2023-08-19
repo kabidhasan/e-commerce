@@ -1,9 +1,11 @@
 const db = require("../db");
 const axios = require("axios");
 const http = require("http");
+
 const ECOM_BANK_ACCOUNT = require('../constants');
 
 const ecom_acc = 111111;
+
 
 exports.addToCart = async (req, res) => {
   const { email, item_id, count } = req.body;
@@ -42,7 +44,7 @@ exports.addToCart = async (req, res) => {
 exports.placeOrder = async (req, res) => {
   try {
     const { email } = req.user;
-    
+
     // retriving name by email
     const nameResult = await db.query(
       "SELECT name FROM user_info WHERE email = $1",
@@ -89,6 +91,7 @@ exports.placeOrder = async (req, res) => {
         item1 * itemPriceMap[1] +
         item2 * itemPriceMap[2] +
         item3 * itemPriceMap[3];
+
       if (!amount) {
         return res.status(500).json({
           success: false,
@@ -127,6 +130,7 @@ exports.placeOrder = async (req, res) => {
       } else {
         console.log("Transaction failed:", transactionResponse.data.msg);
       }
+
       await db.query(
         `
       INSERT INTO "order" (name, email, address, item1, item2, item3, amount)
@@ -140,9 +144,11 @@ exports.placeOrder = async (req, res) => {
         [email]
       );
 
+
       
     } else {
       
+
       throw new Error("No cart items found for the user.");
     }
 
