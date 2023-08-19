@@ -122,7 +122,7 @@ exports.approveOrderById = async (req, res) => {
     const result = await db.query(selectQuery, [order_id]);
     const orderDetails = result.rows[0];
 
-    if (orderDetails.approved = true) {
+    if (orderDetails.approved == true) {
       throw new Error("Order already approved");
     }
 
@@ -207,7 +207,7 @@ exports.paySupplier = async (req, res) => {
     if (bankApiResponse.data.success) {
       res.status(200).json({
         success: true,
-        msg: "Payment to supplier processed successfully",
+        msg: "Payment to suplier prpocessed successfully",
       });
       //await db.query("COMMIT");
     } else {
