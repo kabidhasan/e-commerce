@@ -5,7 +5,6 @@ const { SECRET } = require("../constants");
 
 const axios = require("axios");
 
-
 exports.getUsers = async (req, res) => {
   try {
     const { rows } = await db.query("SELECT user_id, email FROM users");
@@ -22,17 +21,12 @@ exports.register = async (req, res) => {
     const { email, password, address, name } = req.body;
     hashedPassword = await hash(password, 10);
 
-    await db.query("INSERT INTO user_info (email, name, password, address) values ($1, $2, $3, $4)", [
-      email,
-      name,
-      hashedPassword,
-      address
-    ]);
-   
     await db.query(
-      "INSERT INTO cart(email) values ($1)",
-      [email]
+      "INSERT INTO user_info (email, name, password, address) values ($1, $2, $3, $4)",
+      [email, name, hashedPassword, address]
     );
+
+    await db.query("INSERT INTO cart(email) values ($1)", [email]);
 
     return res.status(201).json({
       success: "true",
@@ -44,7 +38,6 @@ exports.register = async (req, res) => {
     });
   }
 };
-
 
 // exports.login = async (req, res) => {
 //   try {
@@ -67,6 +60,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     let user = req.user;
+
     let payload = {
       name: user.name,
       email: user.email,
@@ -82,7 +76,6 @@ exports.login = async (req, res) => {
       token: token,
       success: true,
       msg: "Logged in successfully",
-
     });
   } catch (error) {
     res.status(401).json({
@@ -90,7 +83,6 @@ exports.login = async (req, res) => {
     });
   }
 };
-
 
 exports.setPaymentInfo = async (req, res) => {
   try {
@@ -143,6 +135,7 @@ exports.setPaymentInfo = async (req, res) => {
   }
 };
 
+
 exports.getCurrentUserEmail= async(req, res) => {
   try {
     if (req.user) {
@@ -157,6 +150,7 @@ exports.getCurrentUserEmail= async(req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
 
 
 
