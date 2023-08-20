@@ -4,7 +4,7 @@ const data = {
       item_id: "1",
       item_name: "Honey Nuts",
       slug: "honey-nuts",
-      quantity: 100,
+      quantity: 10000,
       image: "/images/p1.jpg", // 679px × 829px
       item_price: 1200,
 
@@ -14,7 +14,7 @@ const data = {
       item_id: "2",
       item_name: "Gawa Ghee",
       slug: "gawa-ghee",
-      quantity: 100,
+      quantity: 10000,
       image: "/images/p2.jpg",
       item_price: 800,
 
@@ -24,7 +24,7 @@ const data = {
       item_id: "3",
       item_name: "Black Seed Honey",
       slug: "black-seed-honey",
-      quantity: 100,
+      quantity: 10000,
       image: "/images/p3.jpg",
       item_price: 1600,
 
@@ -33,8 +33,3 @@ const data = {
   ],
 };
 export default data;
-
-
-
-
-

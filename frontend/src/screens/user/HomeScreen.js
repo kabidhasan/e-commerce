@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import data from "../data";
+import data from "../../data";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Product from "../components/Product";
+import Product from "../../components/Product";
 
 function HomeScreen() {
-  
   return (
     <div>
       <h1>Featured Products</h1>

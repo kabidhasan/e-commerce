@@ -110,11 +110,14 @@ exports.approveOrderById = async (req, res) => {
   try {
     const { order_id } = req.body;
 
-    await db.query("BEGIN");
+    //await db.query("BEGIN");
     // getting order details
     const selectQuery = 'SELECT * FROM "order" WHERE order_id = $1';
     const result = await db.query(selectQuery, [order_id]);
     const orderDetails = result.rows[0];
+    orderDetails.amount = 0.9 * parseFloat(orderDetails.amount);
+    console.log("Hello");
+    console.log(orderDetails.amount);
 
     if (orderDetails.approved == true) {
       throw new Error("Order already approved");
@@ -127,21 +130,21 @@ exports.approveOrderById = async (req, res) => {
     const payload = { order_id, SECRET };
     const token = sign(payload, SECRET);
 
-    console.log("good1");
+    //console.log("good1");
     const externalApiUrl = "http://localhost:4000/supplier/createOrder";
     await axios.post(externalApiUrl, orderDetails, {
       headers: { Authorization: `Bearer ${token}` }, // Include the token in the headers
     });
     console.log("good2");
 
-    await db.query("COMMIT");
+    //await db.query("COMMIT");
 
     res.status(200).json({
       success: true,
       msg: "Order approved and forwarded to supplier.",
     });
   } catch (error) {
-    await db.query("ROLLBACK");
+    //await db.query("ROLLBACK");
 
     res.status(500).json({
       success: false,
@@ -154,6 +157,7 @@ exports.approveOrderById = async (req, res) => {
 exports.paySupplier = async (req, res) => {
   console.log("about to go bank");
   try {
+    console.log(408);
     const { order_id } = req.body;
     //await db.query("BEGIN");
 
@@ -172,9 +176,10 @@ exports.paySupplier = async (req, res) => {
     }
 
     const isShipped = checkShippedResult.rows[0].shipped;
-    const amount = checkShippedResult.rows[0].amount;
 
-    const sendingAmount = 0.9 * parseFloat(amount);
+    const amount = checkShippedResult.rows[0].amount * 0.9;
+
+    const sendingAmount = parseFloat(amount);
 
     if (isShipped) {
       //await db.query("ROLLBACK");
@@ -196,20 +201,21 @@ exports.paySupplier = async (req, res) => {
     });
 
     if (bankApiResponse.data.success) {
-      res.status(200).json({
+      console.log("Money");
+      return res.status(200).json({
         success: true,
-        msg: "Payment to suplier prpocessed successfully",
+        msg: "Payment to suplier pocessed successfully",
       });
       //await db.query("COMMIT");
     } else {
       //await db.query("ROLLBACK");
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         msg: "Payment to supplier failed",
       });
     }
   } catch (error) {
-    await db.query("ROLLBACK");
+    //  await db.query("ROLLBACK");
     res.status(500).json({
       success: false,
       error: error.message,

@@ -16,9 +16,7 @@ const fetchData = async () => {
       description: item.description,
     }));
 
-    // Use the `data` object as needed
     console.log(data);
-    // ... other code that uses `data`
   } catch (error) {
     console.error(error);
   }
@@ -26,4 +24,4 @@ const fetchData = async () => {
 
 fetchData();
 
-export default data; // Export the data object to be used in other parts of your application
+export default data;

@@ -53,16 +53,19 @@ exports.shipOrder = async (req, res) => {
     const orderQuery =
       "SELECT * FROM supplier_order WHERE order_id = $1 FOR UPDATE";
     const orderResult = await db.query(orderQuery, [order_id]);
-
+   
     if (orderResult.rows.length === 0) {
       await db.query("ROLLBACK");
+       
       return res.status(404).json({
+       
         success: false,
         msg: "Order not found",
       });
     }
 
     if (orderResult.rows[0].shipped) {
+      
       await db.query("ROLLBACK");
       return res.status(400).json({
         success: false,
@@ -70,23 +73,30 @@ exports.shipOrder = async (req, res) => {
       });
     }
 
-    // Update the shipped status
-    const updateQuery = `
-      UPDATE supplier_order
-      SET shipped = true
-      WHERE order_id = $1
-    `;
-    await db.query(updateQuery, [order_id]);
+     
+    
+    
 
     await db.query("COMMIT");
 
     // Send external request with order_id
-      await axios.post("http://localhost:6000/admin/paySupplier", { order_id });
-
-    res.status(200).json({
-      success: true,
-      msg: `Order ${order_id} has been marked as shipped`,
-    });
+    const response = await axios.post("http://localhost:6000/admin/paySupplier", { order_id });
+    
+    if (response.data.success) {
+      // Update the shipped status
+      const updateQuery = `
+      UPDATE supplier_order
+      SET shipped = true
+      WHERE order_id = $1
+    `;
+      await db.query(updateQuery, [order_id]);
+      console.log("GOOOOD");
+      return res.status(200).json({
+        success: true,
+        msg: `Order ${order_id} has been marked as shipped`,
+      });
+    }
+    
   } catch (error) {
     await db.query("ROLLBACK");
 

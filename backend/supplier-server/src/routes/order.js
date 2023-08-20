@@ -12,9 +12,9 @@ const {
 
 
 router.post("/createOrder", createOrder);
-router.get("/getAllOrders", isSupplier, getAllOrders);
-router.get("/getAllPendingOrders", isSupplier, getAllPendingOrders);
-router.get("/getAllShippedOrders", isSupplier, getAllShippedOrders);
-router.post("/shipOrder", isSupplier, shipOrder);
+router.get("/getAllOrders", getAllOrders);
+router.get("/getAllPendingOrders", getAllPendingOrders);
+router.get("/getAllShippedOrders",  getAllShippedOrders);
+router.post("/shipOrder", shipOrder);
 
 module.exports = router;

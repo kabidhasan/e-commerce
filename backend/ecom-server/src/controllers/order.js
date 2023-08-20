@@ -2,14 +2,12 @@ const db = require("../db");
 const axios = require("axios");
 const http = require("http");
 
-const ECOM_BANK_ACCOUNT = require('../constants');
+const ECOM_BANK_ACCOUNT = require("../constants");
 
 const ecom_acc = 111111;
 
-
 exports.addToCart = async (req, res) => {
   const { email, item_id, count } = req.body;
- 
 
   try {
     // if (email != req.user.email) {
@@ -28,9 +26,8 @@ exports.addToCart = async (req, res) => {
     `;
 
     await db.query(cartUpdateQuery, [item_id, count, email]);
-    console.log("done")
+    console.log("done");
     res.status(200).json({
-      
       success: true,
       message: `Item ${item_id} quantity increased by ${count} in the cart.`,
     });
@@ -45,7 +42,7 @@ exports.addToCart = async (req, res) => {
 
 exports.placeOrder = async (req, res) => {
   try {
-    const { email , item1, item2, item3} = req.body;
+    const { email, item1, item2, item3 } = req.body;
     console.log("I am here");
     // retriving name by email
     const nameResult = await db.query(
@@ -71,84 +68,68 @@ exports.placeOrder = async (req, res) => {
 
     const address = addressResult.rows[0].address;
 
-    // retriving cart
-    // const result = await db.query(
-    //   `SELECT item1, item2, item3 FROM cart WHERE email = $1;`,
-    //   [email]
-    // );
-      const itemPrices = await db.query(
-        "SELECT item_id, item_price FROM items"
-      );
-      const itemPriceMap = itemPrices.rows.reduce((map, item) => {
-        map[item.item_id] = item.item_price;
-        return map;
-      }, {});
+    const itemPrices = await db.query("SELECT item_id, item_price FROM items");
+    const itemPriceMap = itemPrices.rows.reduce((map, item) => {
+      map[item.item_id] = item.item_price;
+      return map;
+    }, {});
 
-      // Calculate the total amount
-      const amount =
-        item1 * itemPriceMap[1] +
-        item2 * itemPriceMap[2] +
-        item3 * itemPriceMap[3];
+    // Calculate the total amount
+    const amount =
+      item1 * itemPriceMap[1] +
+      item2 * itemPriceMap[2] +
+      item3 * itemPriceMap[3];
 
-      if (!amount) {
-        return res.status(500).json({
-          success: false,
-          msg: "Cart is empty"
-        })
-      }
-      
-      // checking if he has already set the payment info
-      const accNoQuery = "SELECT bank_acc FROM payment_info WHERE email = $1";
-      accNoResult = await db.query(accNoQuery, [email]);
-      if (!accNoResult.rows.length) {
-        return res.status(500).json({
-          success: false,
-          msg: "Set payment info first",
-        });
-      }
-      const acc_no = accNoResult.rows[0].bank_acc;
-      console.log(acc_no);
-      // Preparing transaction body
+    if (!amount) {
+      return res.status(500).json({
+        success: false,
+        msg: "Cart is empty",
+      });
+    }
 
-      const transactionData = {
-        sender_acc: acc_no, 
-        receiver_acc: ecom_acc, 
-        amount: amount, 
-      };
+    // checking if he has already set the payment info
+    const accNoQuery = "SELECT bank_acc FROM payment_info WHERE email = $1";
+    accNoResult = await db.query(accNoQuery, [email]);
+    if (!accNoResult.rows.length) {
+      return res.status(500).json({
+        success: false,
+        msg: "Set payment info first",
+      });
+    }
+    const acc_no = accNoResult.rows[0].bank_acc;
+    console.log(acc_no);
+    // Preparing transaction body
 
-      // Make a POST request to perform the transaction
-      const transactionResponse = await axios.post(
-        "http://localhost:5000/bank/transaction",
-        transactionData
-      );
+    const transactionData = {
+      sender_acc: acc_no,
+      receiver_acc: ecom_acc,
+      amount: amount,
+    };
 
-      if (transactionResponse.data.success) {
-        
-        console.log(transactionResponse.data.msg);
-      } else {
-        console.log("Transaction failed:", transactionResponse.data.msg);
-      }
+    // Make a POST request to perform the transaction
+    const transactionResponse = await axios.post(
+      "http://localhost:5000/bank/transaction",
+      transactionData
+    );
 
-      await db.query(
-        `
+    if (transactionResponse.data.success) {
+      console.log(transactionResponse.data.msg);
+    } else {
+      console.log("Transaction failed:", transactionResponse.data.msg);
+    }
+
+    await db.query(
+      `
       INSERT INTO "order" (name, email, address, item1, item2, item3, amount)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       `,
-        [name, email, address, item1, item2, item3, amount]
-      );
-      console.log("heyyy");
-      await db.query(
-        `UPDATE cart SET item1 = 0, item2 = 0, item3 = 0 WHERE email = $1;`,
-        [email]
-      );
-
-
-      
-    
-      
-
-      
-    
+      [name, email, address, item1, item2, item3, amount]
+    );
+    console.log("heyyy");
+    await db.query(
+      `UPDATE cart SET item1 = 0, item2 = 0, item3 = 0 WHERE email = $1;`,
+      [email]
+    );
 
     res.status(200).json({
       success: true,
@@ -161,4 +142,3 @@ exports.placeOrder = async (req, res) => {
     });
   }
 };
-

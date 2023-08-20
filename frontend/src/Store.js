@@ -2,18 +2,6 @@ import { createContext, useReducer } from "react";
 
 export const Store = createContext();
 
-// const initialUserInfo = localStorage.getItem("userInfo") || "{}";
-// const initialCartItems = localStorage.getItem("cartItems");
-
-// console.log("Initial User Info:", initialUserInfo);
-// console.log("Initial Cart Items:", initialCartItems);
-
-// const initialState = {
-//   userInfo: initialUserInfo ? JSON.parse(initialUserInfo) : null,
-//   cart: {
-//     cartItems: initialCartItems ? JSON.parse(initialCartItems) : [],
-//   },
-// };
 const initialState = {
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))

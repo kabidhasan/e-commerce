@@ -6,14 +6,14 @@ const authRoutes = require("./routes/auth");
 const orderRoutes = require ("./routes/order")
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-//const passport = require("passport");
+const passport = require("passport");
 
-//require("./middlewares/passport-middleware");
+require("./middlewares/passport-middleware");
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true }));
-//app.use(passport.initialize());
+app.use(passport.initialize());
 
 
 app.use("/supplier/", authRoutes);

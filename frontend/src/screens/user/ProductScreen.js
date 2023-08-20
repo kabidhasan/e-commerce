@@ -6,8 +6,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { useContext } from "react";
-import data from "../data";
-import { Store } from "../Store";
+import data from "../../data";
+import { Store } from "../../Store";
 import Axios from "axios";
 
 function ProductScreen() {
@@ -24,18 +24,9 @@ function ProductScreen() {
 
     const productToAdd = data.products.find((product) => product.slug === slug);
 
-    // Prepare data for the POST request
-    const dataToSend = {
-      email: "user2@example.com", // Replace with the user's email
-      item_id: productToAdd.item_id, // Assuming your API expects item_id
-      count: 1,
-    };
 
     try {
-      // Make the Axios POST request
-     // const response= await Axios.post("/ecom/addToCart", dataToSend);
 
-      // Update the context or state as needed
       ctxDispatch({
         type: "CART_ADD_ITEM",
         payload: { ...productToAdd, quantity },
@@ -84,7 +75,7 @@ function ProductScreen() {
               <Row>
                 <Col>Status:</Col>
                 <Col>
-                  {product.countInStock > 0 ? (
+                  {1 > 0 ? (
                     <Badge bg="success">In Stock</Badge>
                   ) : (
                     <Badge bg="danger">Unavailable</Badge>
@@ -92,11 +83,11 @@ function ProductScreen() {
                 </Col>
               </Row>
             </ListGroup.Item>
-            {product.countInStock > 0 && (
+            {1 > 0 && (
               <ListGroup.Item>
                 <div className="d-grid">
                   <Button onClick={addToCartHandler} variant="primary">
-                    Add to Cart
+                    Buy Now
                   </Button>
                 </div>
               </ListGroup.Item>

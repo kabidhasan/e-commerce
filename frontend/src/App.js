@@ -1,6 +1,6 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-import HomeScreen from "./screens/HomeScreen";
-import ProductScreen from "./screens/ProductScreen";
+import HomeScreen from "./screens/user/HomeScreen";
+import ProductScreen from "./screens/user/ProductScreen";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import { LinkContainer } from "react-router-bootstrap";
@@ -8,30 +8,34 @@ import Badge from "react-bootstrap/Badge";
 import Nav from "react-bootstrap/Nav";
 import { useContext, useEffect } from "react";
 import { Store } from "./Store";
-import CartScreen from "./screens/CartScreen";
-import SigninScreen from "./screens/SignInScreen";
-import SignupScreen from "./screens/SignupScreen";
+import CartScreen from "./screens/user/CartScreen";
+import SigninScreen from "./screens/user/SignInScreen";
+import SignupScreen from "./screens/user/SignupScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import ShippingAddressScreen from "./screens/ShippingAddressScreen";
+import ShippingAddressScreen from "./screens/user/ShippingAddressScreen";
 
-import SignupScreen from "./screens/SignupScreen";
-
-import PaymentScreen from "./screens/PaymentScreen";
-import PlaceOrderScreen from "./screens/PlaceOrderScreen";
-import OrderHistoryScreen from "./screens/OrderHistoryScreen";
-import AdminSigninScreen from "./screens/AdminSigninScreen";
-import AdminHomeScreen from "./screens/AdminHomeScreen";
+import PaymentScreen from "./screens/user/PaymentScreen";
+import PlaceOrderScreen from "./screens/user/PlaceOrderScreen";
+import OrderHistoryScreen from "./screens/user/OrderHistoryScreen";
+import AdminSigninScreen from "./screens/Admin/AdminSigninScreen";
+import AdminHomeScreen from "./screens/Admin/AdminHomeScreen";
 import AllOrdersScreen from "./screens/Admin/AllOrdersScreen";
 import PendingOrdersScreen from "./screens/Admin/PendingOrders";
 import ApprovedOrdersScreen from "./screens/Admin/ApprovedOrders";
 import BankSignScreen from "./screens/Bank/BankSigninScreen";
 import BankSigupScreen from "./screens/Bank/BankSignupScreen";
 import BankHomeScreen from "./screens/Bank/BankHomeScreen";
+import SupplierSigninScreen from "./screens/Supplier/SupplierSigninScreen";
+import SupplierHomeScreen from "./screens/Supplier/SupplierHomeScreen";
+import SupplierAllOrderScreen from "./screens/Supplier/SupplierAllOrderScreen";
+import SupplierPendingOrderScreen from "./screens/Supplier/SupplierPendingOrderScreen";
+import SupplierShippedOrderScreen from "./screens/Supplier/SupplierShippedOrderScreen";
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
+
   const { cart, userInfo } = state;
 
   const signoutHandler = () => {
@@ -40,12 +44,7 @@ function App() {
     localStorage.removeItem("shippingAddress");
     localStorage.removeItem("payment");
   };
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     // Reload the page to update the navigation dropdown after successful login
-  //     window.location.reload();
-  //   }
-  // }, [userInfo]);
+ 
 
   return (
     <BrowserRouter>
@@ -127,7 +126,24 @@ function App() {
               <Route path="/banksignin" element={<BankSignScreen />} />
               <Route path="/banksignup" element={<BankSigupScreen />} />
               <Route path="/bankhome" element={<BankHomeScreen />} />
-
+              <Route path="/bankhome" element={<BankHomeScreen />} />
+              <Route path="/supplierhome" element={<SupplierHomeScreen />} />
+              <Route
+                path="/shippedorders"
+                element={<SupplierShippedOrderScreen />}
+              />
+              <Route
+                path="/suppliersignin"
+                element={<SupplierSigninScreen />}
+              />
+              <Route
+                path="/allorderssupplier"
+                element={<SupplierAllOrderScreen />}
+              />
+              <Route
+                path="/pendingorderssupplier"
+                element={<SupplierPendingOrderScreen />}
+              />
               <Route
                 path="/approvedorders"
                 element={<ApprovedOrdersScreen />}

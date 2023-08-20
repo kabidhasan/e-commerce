@@ -4,11 +4,10 @@ const { sign } = require("jsonwebtoken");
 const { SECRET } = require("../constants");
 const axios = require("axios");
 
-
 exports.getAllItems = async (req, res) => {
-    try {
-    const { item_id }= req.query
-    const query = "SELECT * FROM items"; // Adjust table name if needed
+  try {
+    const { item_id } = req.query;
+    const query = "SELECT * FROM items";
     const result = await db.query(query);
 
     res.status(200).json({
@@ -25,9 +24,9 @@ exports.getAllItems = async (req, res) => {
 };
 
 exports.getCart = async (req, res) => {
-  const { email } = req.user; // Assuming you have user data in req.user
+  const { email } = req.user;
 
-    try {
+  try {
     console.log("getCart called");
     const cartQuery = `
       SELECT * FROM cart

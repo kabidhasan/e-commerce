@@ -13,10 +13,6 @@ function BankHomeScreen() {
 
   const logOutHandler = async () => {
     try {
-      // Make an API call to log out the user
-      //  await Axios.get("/bank/logout");
-
-      // Clear the local user info and navigate to the sign-in screen
       ctxDispatch({ type: "USER_SIGNOUT" });
       localStorage.removeItem("userInfo");
       navigate("/banksignin");

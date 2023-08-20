@@ -5,10 +5,10 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import { Store } from "../Store";
-import CheckoutSteps from "../components/CheckoutSteps";
+import { Store } from "../../Store";
+import CheckoutSteps from "../../components/CheckoutSteps";
 import { toast } from "react-toastify";
-import axios from "axios"
+import axios from "axios";
 export default function PlaceOrderScreen() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -18,7 +18,7 @@ export default function PlaceOrderScreen() {
   cart.itemsPrice = round2(
     cart.cartItems.reduce((a, c) => a + c.quantity * c.item_price, 0)
   );
-  cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
+  cart.shippingPrice = 1 > 0 ? round2(0) : round2(100);
 
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice;
 
@@ -39,7 +39,7 @@ export default function PlaceOrderScreen() {
           item3Count = item.quantity;
         }
       });
-      // Make a POST request to your API for checkout
+
       const response = await axios.post("/ecom/placeOrder", {
         email: emailResponse.data.email,
         item1: item1Count,
@@ -118,7 +118,9 @@ export default function PlaceOrderScreen() {
                           alt={item.item_name}
                           className="img-fluid rounded img-thumbnail"
                         ></img>{" "}
-                        <Link to={`/product/${item.slug}`}>{item.item_name}</Link>
+                        <Link to={`/product/${item.slug}`}>
+                          {item.item_name}
+                        </Link>
                       </Col>
                       <Col md={3}>
                         <span>{item.quantity}</span>

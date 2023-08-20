@@ -58,6 +58,14 @@ main {
   justify-content: center;
   height: 50vh; /* Adjust this value based on your needs */
 }
+.supplier-home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  /* Adjust this value based on your needs */
+}
 
 .button-container {
   display: flex;

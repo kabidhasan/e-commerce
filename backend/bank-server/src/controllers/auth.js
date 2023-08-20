@@ -36,6 +36,7 @@ exports.register = async (req, res) => {
       msg: "Bank user registartion successful",
       bank_acc: bank_acc,
     });
+
   } catch (error) {
     console.log(error);
     res.status(401).json({
@@ -55,6 +56,7 @@ exports.login = async (req, res) => {
     console.log("Bank e abar ashlam");
 
     const token = await sign(payload, SECRET);
+    
     res.status(200).cookie("token", token, { httpOnly: true }).json({
       email: user.email,
       acc_no: user.acc_no,
@@ -95,12 +97,15 @@ exports.logout = async (req, res) => {
 
 exports.verifyBankInfo = async (req, res) => {
   try {
+    
     const { acc_no, pin } = req.query;
-
+    
+    console.log(acc_no);
     const query = "SELECT pin from bank_user where acc_no = $1";
     const result = await db.query(query, [acc_no]);
 
     if (!result.rows.length) {
+      console.log("No row!");
       return res.status(401).json({
         success: false,
         msg: "Account number does not exist",

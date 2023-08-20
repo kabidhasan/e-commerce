@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
-import { Store } from "../Store";
-import CheckoutSteps from "../components/CheckoutSteps";
+import { Store } from "../../Store";
+import CheckoutSteps from "../../components/CheckoutSteps";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function PaymentScreen() {
   const navigate = useNavigate();
@@ -22,9 +23,18 @@ export default function PaymentScreen() {
     }
   }, [userInfo, navigate]);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-
+    const response = await axios.get(
+      `http://localhost:5000/bank/verifyBankInfo?acc_no=${BankAc}&pin=${secretKey}`
+    );
+    // I want to use the BankAc value in other files too. How to do that?
+    if (response.data.success) {
+      toast.success("Payment Info Verified!");
+      navigate("/placeorder");
+    } else {
+      toast.success("Payment Info Invalid");
+    }
     // will handle authentication here
 
     ctxDispatch({
@@ -39,8 +49,6 @@ export default function PaymentScreen() {
         BankAc,
       })
     );
-    
-    navigate("/placeorder");
   };
   return (
     <div>

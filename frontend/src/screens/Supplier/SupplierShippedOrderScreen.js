@@ -10,8 +10,8 @@ export default function ApprovedOrdersScreen() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/admin/getAllApprovedOrders");
-        setOrders(response.data.approvedOrders);
+        const response = await axios.get("http://localhost:4000/supplier/getAllShippedOrders");
+        setOrders(response.data.shippedOrders);
         setLoading(false);
       } catch (error) {
         setError("An error occurred while fetching orders.");
@@ -24,7 +24,7 @@ export default function ApprovedOrdersScreen() {
 
   return (
     <div>
-      <h1 className="centered-container">Approved Order</h1>
+      <h1 className="centered-container">Shipped Orders</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -36,7 +36,7 @@ export default function ApprovedOrdersScreen() {
               <th>Address</th>
               <th>Products</th>
               <th>Amount</th>
-              <th>Delivered</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -54,7 +54,7 @@ export default function ApprovedOrdersScreen() {
                 </td>
                 <td>{order.amount} Tk</td>
 
-                <td>{order.shipped ? "Yes" : "No"}</td>
+                
               </tr>
             ))}
           </tbody>

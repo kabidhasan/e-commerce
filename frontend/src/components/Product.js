@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { Store } from "../Store";
 import data from "../data";
-import { userData } from "../screens/SignInScreen";
+import { userData } from "../screens/user/SignInScreen";
 import axios from "axios";
 
 function Product(props) {
@@ -14,7 +14,7 @@ function Product(props) {
   const {
     cart: { cartItems },
   } = state;
-  
+
   const addToCartHandler = async (item) => {
     const existItem = cartItems.find((x) => x.item_id === item.item_id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
@@ -42,8 +42,6 @@ function Product(props) {
     }
   };
 
-  
-
   return (
     <Card>
       <Link to={`/product/${product.slug}`}>
@@ -54,9 +52,8 @@ function Product(props) {
           <Card.Title>{product.item_name}</Card.Title>
         </Link>
         <Card.Text>${product.item_price}</Card.Text>
-        
-          <Button onClick={() => addToCartHandler(product)}>Add to cart</Button>
-        
+
+        <Button onClick={() => addToCartHandler(product)}>Add to cart</Button>
       </Card.Body>
     </Card>
   );

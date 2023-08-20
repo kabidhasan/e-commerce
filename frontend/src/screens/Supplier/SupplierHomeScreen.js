@@ -1,31 +1,31 @@
 import { useEffect, useState, useContext } from "react";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router";
-import { Store } from "../Store";
-import Axios from "axios";
-function AdminHomeScreen() {
+import { Store } from "../../Store";
+import axios from "axios";
+function SupplierHomeScreen() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
   const [selectedTab, setSelectedTab] = useState("all"); // State to track the selected tab
 
-  const approvedHandler = (e) => {
-    navigate("/approvedorders");
+  const shippedHandler = (e) => {
+    navigate("/shippedorders");
   };
   const pendingHandler = (e) => {
-    navigate("/pendingorders");
+    navigate("/pendingorderssupplier");
   };
   const allOrderHandler = () => {
-    navigate("/allordersadmin");
+    navigate("/allorderssupplier");
   };
   const logOutHandler = async () => {
     try {
-      // Make an API call to log out the admin
-      await Axios.get("/admin/logout");
+      // Make an API call to log out the supplier
+      //await axios.get("http://localhost:4000/supplier/logout");
       // Clear the local user info and navigate to the admin sign-in screen
       ctxDispatch({ type: "USER_SIGNOUT" });
       localStorage.removeItem("userInfo");
-      navigate("/adminsignin");
+      navigate("/suppliersignin");
     } catch (error) {
       console.log("Error:", error);
     }
@@ -36,13 +36,13 @@ function AdminHomeScreen() {
     const userInfo = localStorage.getItem("userInfo");
     if (!userInfo) {
       // If not logged in, navigate to admin sign-in screen
-      navigate("/adminsignin");
+      navigate("/suppliersignin");
     }
   }, []);
 
   return (
-    <div className="admin-home-container">
-      <h1>Welcome to Admin Dashboard</h1>
+    <div className="supplier-home-container">
+      <h1>Welcome to Supplier Dashboard</h1>
       <h5 className="subtitle">Here you can check various types of order</h5>
       {/* Buttons for selecting the order status */}
       <div className="button-container">
@@ -50,9 +50,9 @@ function AdminHomeScreen() {
           <Button
             type="submit"
             style={{ width: "580px" }}
-            onClick={approvedHandler}
+            onClick={shippedHandler}
           >
-            Approved Orders
+            Shipped Orders
           </Button>
         </div>
         <div className="mb-3">
@@ -88,4 +88,4 @@ function AdminHomeScreen() {
   );
 }
 
-export default AdminHomeScreen;
+export default SupplierHomeScreen;

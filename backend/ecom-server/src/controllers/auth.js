@@ -39,24 +39,7 @@ exports.register = async (req, res) => {
   }
 };
 
-// exports.login = async (req, res) => {
-//   try {
-//     let user = req.user;
-//     console.log(req.user);
-//     let payload = {
-//       email: user.email,
-//     };
-//     const token = await sign(payload, SECRET);
-//     res.status(200).cookie("token", token, { httpOnly: true }).json({
-//       success: true,
-//       msg: "Logged in successfully",
-//     });
-//   } catch (error) {
-//     res.status(401).json({
-//       error: error.message,
-//     });
-//   }
-// };
+
 exports.login = async (req, res) => {
   try {
     let user = req.user;

@@ -52,7 +52,7 @@ exports.transaction = async (req, res) => {
       newReceiverBalance,
       receiver_acc,
     ]);
-
+    
     // Insert the transaction details
     const insertQuery = `
       INSERT INTO "transaction" (sender_acc, receiver_acc, amount)
@@ -64,15 +64,17 @@ exports.transaction = async (req, res) => {
       receiver_acc,
       amount,
     ]);
-
+    
     // Commit the transaction
     await db.query("COMMIT");
 
     res.status(201).json({
+      
       success: true,
       msg: "Transaction created successfully",
       transaction: insertResult.rows[0],
     });
+    console.log("alive");
   } catch (error) {
     // Rollback the transaction in case of an error
     await db.query("ROLLBACK");

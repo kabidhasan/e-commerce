@@ -1,17 +1,42 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-export default function ApprovedOrdersScreen() {
+export default function AllOrdersScreen() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const handleApproveClick = async (orderId) => {
+    try {
+      // Send an API request to update the order's approval status in the database
+      const response = await axios.post("http://localhost:4000/supplier/shipOrder", {
+        order_id: orderId,
+      });
+
+        if (response.data.success) {
+            console.log("hey");
+        // Update the order's approved status in the local state
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.order_id === orderId ? { ...order, shipped: true } : order
+          )
+        );
+      }
+    } catch (error) {
+        toast.error("Internal error occured");
+      console.error("Error approving order:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/admin/getAllApprovedOrders");
-        setOrders(response.data.approvedOrders);
+        const response = await axios.get(
+          "http://localhost:4000/supplier/getAllOrders"
+        );
+        setOrders(response.data.orders);
         setLoading(false);
       } catch (error) {
         setError("An error occurred while fetching orders.");
@@ -24,7 +49,7 @@ export default function ApprovedOrdersScreen() {
 
   return (
     <div>
-      <h1 className="centered-container">Approved Order</h1>
+      <h1 className="centered-container">Order History</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -36,7 +61,9 @@ export default function ApprovedOrdersScreen() {
               <th>Address</th>
               <th>Products</th>
               <th>Amount</th>
-              <th>Delivered</th>
+
+              
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -54,7 +81,19 @@ export default function ApprovedOrdersScreen() {
                 </td>
                 <td>{order.amount} Tk</td>
 
-                <td>{order.shipped ? "Yes" : "No"}</td>
+                
+                <td>
+                  {order.shipped ? (
+                    <span>Shipped</span>
+                  ) : (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleApproveClick(order.order_id)}
+                    >
+                      Ship
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

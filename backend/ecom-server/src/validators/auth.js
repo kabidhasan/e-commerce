@@ -21,7 +21,9 @@ const name = check("name").notEmpty().withMessage("Name is required.");
 const address = check("address").notEmpty().withMessage("Address is required.");
 
 const loginFieldsCheck = check("email").custom(async (value, { req }) => {
-  const user = await db.query("SELECT * FROM user_info WHERE email = $1", [value]);
+  const user = await db.query("SELECT * FROM user_info WHERE email = $1", [
+    value,
+  ]);
   if (!user.rows.length) {
     throw new Error("Email does not exist.");
   }
