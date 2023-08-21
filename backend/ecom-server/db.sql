@@ -37,10 +37,15 @@ CREATE TABLE "order" (
 
 --item table
 CREATE TABLE items (
-    item_id INTEGER PRIMARY KEY,
-    item_name VARCHAR(255) NOT NULL,
-    item_price DECIMAL(10, 2) NOT NULL,
-    CHECK (item_id >= 1 AND item_id <= 3)
+    item_id SERIAL PRIMARY KEY,
+  item_name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  quantity INTEGER NOT NULL,
+  image VARCHAR(255),
+  item_price NUMERIC(10, 2) NOT NULL,
+  description TEXT,
+  CHECK (item_id >= 1 AND item_id <= 3)
+    
 );
 
 

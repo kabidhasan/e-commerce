@@ -42,14 +42,6 @@ export default function BankSignScreen() {
     <Container className="small-container">
       <h1 className="my-3">Bank User Sign In</h1>
       <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
         <Form.Group className="mb-3" controlId="acc_no">
           <Form.Label>Account Number</Form.Label>
           <Form.Control required onChange={(e) => setAcc_no(e.target.value)} />

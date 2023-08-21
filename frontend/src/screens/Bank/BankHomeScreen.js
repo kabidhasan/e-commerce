@@ -46,12 +46,13 @@ function BankHomeScreen() {
       {/* Use Card to display the balance */}
       {balance !== null && (
         <Card style={{ width: "18rem", margin: "0 auto" }}>
-          <Card.Body>
+          <Card.Body align = "center" >
             <Card.Title>Your Bank Balance</Card.Title>
             <Card.Text>{balance} Tk</Card.Text>
           </Card.Body>
         </Card>
       )}
+      <br /> 
 
       <div className="button-container">
         <div className="mb-3">

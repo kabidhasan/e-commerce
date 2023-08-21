@@ -123,10 +123,6 @@ exports.approveOrderById = async (req, res) => {
       throw new Error("Order already approved");
     }
 
-    const updateQuery =
-      'UPDATE "order" SET approved = true WHERE order_id = $1';
-    await db.query(updateQuery, [order_id]);
-
     const payload = { order_id, SECRET };
     const token = sign(payload, SECRET);
 
@@ -135,6 +131,9 @@ exports.approveOrderById = async (req, res) => {
     await axios.post(externalApiUrl, orderDetails, {
       headers: { Authorization: `Bearer ${token}` }, // Include the token in the headers
     });
+    const updateQuery =
+      'UPDATE "order" SET approved = true WHERE order_id = $1';
+    await db.query(updateQuery, [order_id]);
     console.log("good2");
 
     //await db.query("COMMIT");

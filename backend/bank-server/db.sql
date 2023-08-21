@@ -13,11 +13,11 @@ CREATE TABLE bank_user (
 
 -- Inserting supplier info manually
 INSERT INTO bank_user (email, acc_no, name, pin, address)
-VALUES ('suppler@example.com', '555555', 'Supplier of Ecommerce', '$2a$10$8ct8jGiPdzpI9y2B8ZrJoe3IRQAQ0ObqBkU36k69W0u1qJ7x78dUC', 'Dhaka');
+VALUES ('supplier@example.com', '555555', 'Supplier of Ecommerce', '$2a$10$8ct8jGiPdzpI9y2B8ZrJoe3IRQAQ0ObqBkU36k69W0u1qJ7x78dUC', 'Dhaka');
 
 -- Inserting admin info manually
 INSERT INTO bank_user (email, acc_no, name, pin, address)
-VALUES ('admin@example.com', '111111', 'Admin of Ecommerce', ' $2a$10$hiwjmMBJh8i/IcQENbkaKusFYgDoDaXbW8/SSuJR2klsFrEM.JMmy', 'Dhaka');
+VALUES ('admin@example.com', '111111', 'Admin of Ecommerce', '$2a$10$hiwjmMBJh8i/IcQENbkaKusFYgDoDaXbW8/SSuJR2klsFrEM.JMmy', 'Dhaka');
 
 
 -- Create a sequence for transaction_id starting from 3330

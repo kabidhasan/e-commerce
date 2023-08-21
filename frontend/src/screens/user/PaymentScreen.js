@@ -30,10 +30,23 @@ export default function PaymentScreen() {
     );
     // I want to use the BankAc value in other files too. How to do that?
     if (response.data.success) {
-      toast.success("Payment Info Verified!");
+      console.log(userInfo);
+      //toast.success("Payment Info Verified!");
+      ///*** changing
+      const bankAccLinkResponse = await axios.post("/ecom/setPaymentInfo", {
+        acc_no: BankAc,
+        email: userInfo.email,
+      });
+      if (bankAccLinkResponse.data.success) {
+        toast.success(bankAccLinkResponse.data.msg);
+      }
+      else {
+        console.log(bankAccLinkResponse.data);
+      }
+      //changing*/
       navigate("/placeorder");
     } else {
-      toast.success("Payment Info Invalid");
+      toast.error("Payment Info Invalid");
     }
     // will handle authentication here
 

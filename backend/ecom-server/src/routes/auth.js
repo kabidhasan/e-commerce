@@ -30,7 +30,7 @@ router.post(
 );
 router.post("/login", loginValidation, validationMiddleware, login);
 
-router.post("/setPaymentInfo", userAuth, setPaymentInfo);
+router.post("/setPaymentInfo", setPaymentInfo);
 
 router.get("/protected", userAuth, protected);
 

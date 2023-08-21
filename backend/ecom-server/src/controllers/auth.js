@@ -69,46 +69,36 @@ exports.login = async (req, res) => {
 
 exports.setPaymentInfo = async (req, res) => {
   try {
-    const { email } = req.user;
+    console.log("arrived");
+    const { email, acc_no } = req.body;
+    console.log(email);
+    console.log(acc_no);
     const query = "SELECT email FROM payment_info WHERE email = $1";
     const result = await db.query(query, [email]);
 
+    // if there is already a bank account against the email address, we will update it
     if (result.rows.length) {
-      return res.status(500).json({
-        success: false,
-        msg: "Payment info already set for this account",
+      const updateQuery = "Update payment_info set bank_acc = $1 where email = $2 ";
+      await db.query(updateQuery, [acc_no, email]);
+
+      return res.status(200).json({
+        success: true,
+        msg: "payment info updated successfully",
       });
     }
-
-    // Verify payment info using the other server's API
-
-    const { acc_no, pin } = req.body; // Assuming you're sending acc_no and pin in the request body
-
-    const verifyBankInfoResponse = await axios.get(
-      "http://localhost:5000/bank/verifyBankInfo",
-      {
-        params: {
-          acc_no: acc_no,
-          pin: pin,
-        },
-      }
-    );
-
-    if (verifyBankInfoResponse.data.success) {
-      const insertQuery =
-        "INSERT INTO payment_info (email, bank_acc) VALUES ($1, $2)";
+    //if there is no entry of the email in the payment_info table, we will insert it
+    else {
+      const insertQuery= "INSERT INTO payment_info (email, bank_acc) VALUES ($1, $2)";
       await db.query(insertQuery, [email, acc_no]);
 
       return res.status(200).json({
         success: true,
-        msg: "Payment info verified and set successfully",
-      });
-    } else {
-      return res.status(401).json({
-        success: false,
-        msg: "Failed to verify payment info",
+        msg: "payment info set successfully",
       });
     }
+
+    
+    
   } catch (error) {
     res.status(500).json({
       success: false,
