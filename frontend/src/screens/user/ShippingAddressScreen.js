@@ -24,6 +24,8 @@ export default function ShippingAddressScreen() {
     }
   }, [userInfo, navigate]);
   const [country, setCountry] = useState(shippingAddress.country || "");
+
+  // const combinedAddress = useState`${address}, ${city}, ${postalCode}, ${country}`;
   const submitHandler = (e) => {
     e.preventDefault();
     ctxDispatch({
@@ -34,6 +36,7 @@ export default function ShippingAddressScreen() {
         city,
         postalCode,
         country,
+        // combinedAddress
       },
     });
     localStorage.setItem(
@@ -46,6 +49,7 @@ export default function ShippingAddressScreen() {
         country,
       })
     );
+    //console.log(combinedAddress);
     navigate("/payment");
   };
   return (

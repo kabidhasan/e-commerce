@@ -21,10 +21,14 @@ export default function PlaceOrderScreen() {
   cart.shippingPrice = 1 > 0 ? round2(0) : round2(100);
 
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice;
+  
+  const combinedAddress = `${cart.shippingAddress.fullName},\n${cart.shippingAddress.address},\n${cart.shippingAddress.city}, ${cart.shippingAddress.postalCode}, ${cart.shippingAddress.country}`;
 
   const placeOrderHandler = async () => {
     try {
+      console.log(combinedAddress);
       const emailResponse = await axios.get("/ecom/getCurrentUserEmail");
+      //console.log(shippingAddress.combinedAddress);
       //setCheckoutLoading(true); // Start loading
       let item1Count = 0;
       let item2Count = 0;
@@ -45,6 +49,7 @@ export default function PlaceOrderScreen() {
         item1: item1Count,
         item2: item2Count,
         item3: item3Count,
+        address: combinedAddress
       });
 
       if (response.data.success) {

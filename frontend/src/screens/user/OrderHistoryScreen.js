@@ -1,7 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { Store } from "../../Store";
 import axios from "axios";
 
 export default function OrderHistoryScreen() {
+  
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const {
+    userInfo,
+    cart: { payment },
+  } = state;
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -15,7 +22,9 @@ export default function OrderHistoryScreen() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/admin/getAllOrders");
+        const response = await axios.get(
+          `/ecom/getAllOrdersByEmail?email=${userInfo.email}`
+        );
         setOrders(response.data.orders);
         setLoading(false);
       } catch (error) {
@@ -37,34 +46,25 @@ export default function OrderHistoryScreen() {
             <th>Name</th>
             <th>Address</th>
             <th>Product</th>
-            <th>Delivered</th>
-            <th>Actions</th>
+            <th>Approval</th>
+            <th>Shipment</th>
           </tr>
         </thead>
         <tbody>
           {orders.map((order) => (
-            <tr key={order._id}>
-              <td>{order._id}</td>
+            <tr key={order.order_id}>
+              <td>{order.order_id}</td>
               <td>{order.name}</td>
-              <td>{order.address}</td>
+              <td style={{ whiteSpace: "pre-line" }}>{order.address}</td>
               <td>
                 <ul>
-                  {order.products.map((product, index) => (
-                    <li key={index}>
-                      {product.name} (Count: {product.count})
-                    </li>
-                  ))}
+                  <li>Honey Nut (Count: {order.item1})</li>
+                  <li>Gawa Ghee (Count: {order.item2})</li>
+                  <li>Black Seed Honey (Count: {order.item3})</li>
                 </ul>
               </td>
-              <td>{order.delivered ? "Yes" : "No"}</td>
-              <td>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleApproveClick(order._id)}
-                >
-                  Approve
-                </button>
-              </td>
+              <td>{order.approved ? "Approved" : "Waiting For Approval"}</td>
+              <td>{order.shipped ? "Shipped" : "Pending"}</td>
             </tr>
           ))}
         </tbody>

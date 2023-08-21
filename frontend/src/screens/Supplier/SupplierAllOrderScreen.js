@@ -10,10 +10,11 @@ export default function AllOrdersScreen() {
   const handleApproveClick = async (orderId) => {
     try {
       // Send an API request to update the order's approval status in the database
+      console.log("req will be sent");
       const response = await axios.post("http://localhost:4000/supplier/shipOrder", {
         order_id: orderId,
       });
-
+      console.log("req sent");
         if (response.data.success) {
             console.log("hey");
         // Update the order's approved status in the local state
@@ -33,9 +34,11 @@ export default function AllOrdersScreen() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
+        
         const response = await axios.get(
           "http://localhost:4000/supplier/getAllOrders"
         );
+        
         setOrders(response.data.orders);
         setLoading(false);
       } catch (error) {
@@ -62,7 +65,6 @@ export default function AllOrdersScreen() {
               <th>Products</th>
               <th>Amount</th>
 
-              
               <th>Actions</th>
             </tr>
           </thead>
@@ -71,7 +73,7 @@ export default function AllOrdersScreen() {
               <tr key={order.order_id}>
                 <td>{order.order_id}</td>
                 <td>{order.name}</td>
-                <td>{order.address}</td>
+                <td style={{ whiteSpace: "pre-line" }}>{order.address}</td>
                 <td>
                   <ul>
                     <li>Honey Nut (Count: {order.item1})</li>
@@ -81,7 +83,6 @@ export default function AllOrdersScreen() {
                 </td>
                 <td>{order.amount} Tk</td>
 
-                
                 <td>
                   {order.shipped ? (
                     <span>Shipped</span>

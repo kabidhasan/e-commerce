@@ -79,3 +79,22 @@ exports.getBankAccByEmail = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getAllOrdersByEmail = async (req, res) => {
+  try {
+    const { email } = req.query;
+    
+    const query = 'SELECT * FROM "order" WHERE email =$1';
+    const orders = await db.query(query, [email]);
+
+    res.status(200).json({
+      success: true,
+      orders: orders.rows,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};

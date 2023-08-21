@@ -154,7 +154,7 @@ exports.approveOrderById = async (req, res) => {
 };
 
 exports.paySupplier = async (req, res) => {
-  console.log("about to go bank");
+  console.log(`payment req recieved`);
   try {
     console.log(408);
     const { order_id } = req.body;
@@ -165,7 +165,7 @@ exports.paySupplier = async (req, res) => {
     const checkShippedQuery =
       'SELECT shipped, amount FROM "order" WHERE order_id = $1';
     const checkShippedResult = await db.query(checkShippedQuery, [order_id]);
-
+    
     if (!checkShippedResult.rows.length) {
       //await db.query("ROLLBACK");
       return res.status(404).json({
@@ -180,7 +180,10 @@ exports.paySupplier = async (req, res) => {
 
     const sendingAmount = parseFloat(amount);
 
+    
+
     if (isShipped) {
+      console.log(413);
       //await db.query("ROLLBACK");
       return res.status(400).json({
         success: false,
@@ -198,8 +201,9 @@ exports.paySupplier = async (req, res) => {
       receiver_acc: receiver_acc,
       amount: sendingAmount,
     });
-
+    console.log(416);
     if (bankApiResponse.data.success) {
+      await db.query('update "order" set shipped= true where order_id = $1',[order_id]);
       console.log("Money");
       return res.status(200).json({
         success: true,

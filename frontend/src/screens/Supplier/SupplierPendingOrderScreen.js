@@ -56,7 +56,7 @@ export default function PendingOrdersScreen() {
               <th>Address</th>
               <th>Products</th>
               <th>Amount</th>
-              
+
               <th>Actions</th>
             </tr>
           </thead>
@@ -65,7 +65,7 @@ export default function PendingOrdersScreen() {
               <tr key={order.order_id}>
                 <td>{order.order_id}</td>
                 <td>{order.name}</td>
-                <td>{order.address}</td>
+                <td style={{ whiteSpace: "pre-line" }}>{order.address}</td>
                 <td>
                   <ul>
                     <li>Honey Nut (Count: {order.item1})</li>
@@ -75,9 +75,8 @@ export default function PendingOrdersScreen() {
                 </td>
                 <td>{order.amount} Tk</td>
 
-                
                 <td>
-                  {order.shipped? (
+                  {order.shipped ? (
                     <span>Shipped</span>
                   ) : (
                     <button

@@ -42,7 +42,7 @@ exports.addToCart = async (req, res) => {
 
 exports.placeOrder = async (req, res) => {
   try {
-    const { email, item1, item2, item3 } = req.body;
+    const { email, item1, item2, item3, address } = req.body;
     console.log("I am here");
     // retriving name by email
     const nameResult = await db.query(
@@ -57,16 +57,16 @@ exports.placeOrder = async (req, res) => {
     const name = nameResult.rows[0].name;
 
     // retriving address by email
-    const addressResult = await db.query(
-      "SELECT address FROM user_info WHERE email = $1",
-      [email]
-    );
+    // const addressResult = await db.query(
+    //   "SELECT address FROM user_info WHERE email = $1",
+    //   [email]
+    // );
 
-    if (addressResult.rows.length === 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // if (addressResult.rows.length === 0) {
+    //   return res.status(404).json({ message: "User not found" });
+    // }
 
-    const address = addressResult.rows[0].address;
+    // const address = addressResult.rows[0].address;
 
     const itemPrices = await db.query("SELECT item_id, item_price FROM items");
     const itemPriceMap = itemPrices.rows.reduce((map, item) => {

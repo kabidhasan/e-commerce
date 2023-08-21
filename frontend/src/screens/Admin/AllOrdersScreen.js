@@ -44,7 +44,7 @@ export default function AllOrdersScreen() {
 
   return (
     <div>
-      <h1 className="centered-container">Order History</h1>
+      <h1 className="centered-container">All Orders</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -57,7 +57,7 @@ export default function AllOrdersScreen() {
               <th>Products</th>
               <th>Amount</th>
 
-              <th>Delivered</th>
+              <th>Shipment</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -66,7 +66,7 @@ export default function AllOrdersScreen() {
               <tr key={order.order_id}>
                 <td>{order.order_id}</td>
                 <td>{order.name}</td>
-                <td>{order.address}</td>
+                <td style={{ whiteSpace: "pre-line" }}>{order.address}</td>
                 <td>
                   <ul>
                     <li>Honey Nut (Count: {order.item1})</li>
@@ -76,7 +76,7 @@ export default function AllOrdersScreen() {
                 </td>
                 <td>{order.amount} Tk</td>
 
-                <td>{order.shipped ? "Yes" : "No"}</td>
+                <td>{order.shipped ? "Shipped" : "Pending"}</td>
                 <td>
                   {order.approved ? (
                     <span>Approved</span>

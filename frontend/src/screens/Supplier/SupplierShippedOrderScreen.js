@@ -36,7 +36,6 @@ export default function ApprovedOrdersScreen() {
               <th>Address</th>
               <th>Products</th>
               <th>Amount</th>
-              
             </tr>
           </thead>
           <tbody>
@@ -44,7 +43,7 @@ export default function ApprovedOrdersScreen() {
               <tr key={order.order_id}>
                 <td>{order.order_id}</td>
                 <td>{order.name}</td>
-                <td>{order.address}</td>
+                <td style={{ whiteSpace: "pre-line" }}>{order.address}</td>
                 <td>
                   <ul>
                     <li>Honey Nut (Count: {order.item1})</li>
@@ -53,8 +52,6 @@ export default function ApprovedOrdersScreen() {
                   </ul>
                 </td>
                 <td>{order.amount} Tk</td>
-
-                
               </tr>
             ))}
           </tbody>

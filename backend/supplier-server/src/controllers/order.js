@@ -48,6 +48,7 @@ exports.shipOrder = async (req, res) => {
 
   try {
     await db.query("BEGIN");
+    
 
     // Check if the order exists and is not already shipped
     const orderQuery =
@@ -63,9 +64,9 @@ exports.shipOrder = async (req, res) => {
         msg: "Order not found",
       });
     }
-
+    
     if (orderResult.rows[0].shipped) {
-      
+      console.log(`shipment request valid for order id : ${order_id}`);
       await db.query("ROLLBACK");
       return res.status(400).json({
         success: false,
@@ -83,6 +84,7 @@ exports.shipOrder = async (req, res) => {
     const response = await axios.post("http://localhost:6000/admin/paySupplier", { order_id });
     
     if (response.data.success) {
+      console.log(`requesting payment for order id : ${order_id}`);
       // Update the shipped status
       const updateQuery = `
       UPDATE supplier_order
